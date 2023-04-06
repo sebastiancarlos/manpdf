@@ -7,7 +7,7 @@ Read your Man pages in PDF format.
 Download the script and make it executable by running:
 
 ```shell
-curl https://raw.githubusercontent.com/sebastiancarlos/manpdf/main/manpdf --output $HOME/.local/bin/manpdf
+curl https://raw.githubusercontent.com/sebastiancarlos/manpdf/main/manpdf -O $HOME/.local/bin/manpdf
 chmod +x $HOME/.local/bin/manpdf
 ```
 
