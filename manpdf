@@ -7,7 +7,7 @@
 # ARG_POSITIONAL_SINGLE([name-or-file])
 # ARG_POSITIONAL_SINGLE([section],[],[""])
 # ARG_DEFAULTS_POS([])
-# ARG_HELP([ManPDF - Open a man page as a PDF file.],[ManPDF should work everywhere that has: \n - A 'man' implementation,\n - 'groff', and\n - 'open' or 'xdg-open' associated with an application that can open PDFs.],[h],[help],[Prints this help])
+# ARG_HELP([ManPDF - Open a man page as a PDF file.],[ManPDF should work everywhere. The only requirements are: \n - A 'man' implementation ('man-db', 'mandoc', or even that old non-GPL implementation on macOS),\n - 'groff', and\n - 'open' or 'xdg-open' associated with an application that can open PDFs.],[h],[help],[Prints this help])
 # ARG_VERSION([echo $(basename $0) 420.69])
 # ARGBASH_GO()
 # needed because of Argbash --> m4_ignore([
@@ -51,8 +51,8 @@ print_help()
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
 	printf '\t%s\n' "-h, --help: Prints this help"
 	printf '\t%s\n' "-v, --version: Prints version"
-	printf '\n%s\n' "ManPDF should work everywhere that has:
- - A 'man' implementation,
+	printf '\n%s\n' "ManPDF should work everywhere. The only requirements are:
+ - A 'man' implementation ('man-db', 'mandoc', or even that old non-GPL implementation on macOS),
  - 'groff', and
  - 'open' or 'xdg-open' associated with an application that can open PDFs."
 }

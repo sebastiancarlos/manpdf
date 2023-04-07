@@ -13,17 +13,6 @@ chmod +x $HOME/.local/bin/manpdf
 
 Make sure that `$HOME/.local/bin` exists and is in your `$PATH`.
 
-## Usage
-
-```shell
-<Open a man page as a PDF file>
-Usage: manpdf [-o|--output <arg>] [--(no-)open-pdf] [-h|--help] [-v|--version] <name-or-file> [<section>]
-	-o, --output: The output file (no default)
-	--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)
-	-h, --help: Prints help
-	-v, --version: Prints version
-```
-
 ## Example
 
 To view the man page for `ls` in PDF format, run:
@@ -31,6 +20,24 @@ To view the man page for `ls` in PDF format, run:
 ```shell
 manpdf ls
 ```
+
+## Usage
+
+```shell
+manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]
+        -o, --output: The output file (no default)
+        --open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)
+        -d, --debug, --no-debug: Print debug information too (off by default)
+        -h, --help: Prints this help
+        -v, --version: Prints version
+```
+
+## Requirements
+
+ManPDF should work everywhere. The only requirements are:
+ - A `man` implementation (`man-db`, `mandoc`, or even that old non-GPL implementation on macOS),
+ - `groff`, and
+ - `open` or `xdg-open` associated with an application that can open PDFs.
 
 ## Thanks to
 - [Argbash](https://argbash.io/) for generating the CLI parser.
