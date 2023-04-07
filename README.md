@@ -43,7 +43,7 @@ ManPDF should work everywhere. The only requirements are:
 ## Troubleshooting
 
 ### `groff: fatal error: invalid device 'pdf'`
-Some distros come with a `groff` version that doesn't support PDF. For example, Debian and Ubuntu come with the `groff-base` package, which causes the issue `groff: fatal error: invalid device 'pdf'`. To fix this, install the `groff` package instead:
+Some distros come with a `groff` version that doesn't support PDF. For example, Debian and Ubuntu come with the `groff-base` package, which causes the issue `groff: fatal error: invalid device 'pdf'`. To fix this, install the `groff` package:
 
 ```bash
 sudo apt install groff
