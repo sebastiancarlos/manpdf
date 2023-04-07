@@ -36,8 +36,18 @@ manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|-
 
 ManPDF should work everywhere. The only requirements are:
  - A `man` implementation (`man-db`, `mandoc`, or even that old non-GPL implementation on macOS),
- - `groff`, and
+ - `groff`, 
+ - `gzip`, to handle distros that compress man pages by default, and
  - `open` or `xdg-open` associated with an application that can open PDFs.
+
+## Troubleshooting
+
+### `groff: fatal error: invalid device 'pdf'`
+Some distros come with a `groff` version that doesn't support PDF. For example, Debian and Ubuntu come with the `groff-base` package, which causes the issue `groff: fatal error: invalid device 'pdf'`. To fix this, install the `groff` package instead:
+
+```bash
+sudo apt install groff
+```
 
 ## Thanks to
 - [Argbash](https://argbash.io/) for generating the CLI parser.

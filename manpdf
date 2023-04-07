@@ -173,23 +173,35 @@ if [[ -z "$FILE" ]]; then
   exit 1
 fi
 
+# Some distros have gzipped man pages, so we need to gunzip it before
+# passing it to groff.
+if [[ "$FILE" == *.gz ]]; then
+  if [[ "$_arg_debug" == "on" ]]; then
+    echo "Gunzipping file: $FILE"
+  fi
+
+  # gunzip the file
+  UNZIPPED_FILE_NAME="/tmp/$(basename $FILE .gz)"
+  gunzip -c $FILE > $UNZIPPED_FILE_NAME
+  FILE=$UNZIPPED_FILE_NAME
+
+  if [[ "$_arg_debug" == "on" ]]; then
+    echo "Gunzipped file: $FILE"
+  fi
+fi
+
 # get output file. If no output is provided default to /tmp/NAME.pdf
 OUTPUT="/tmp/$NAME.pdf"
 if [[ -n "$_arg_output" ]]; then
   OUTPUT="$_arg_output"
 fi
 
+# run the command
 echo "Generating PDF for '$NAME'"
-
-# store the command to run
 COMMAND="groff -Tpdf -mandoc -c $FILE > $OUTPUT"
-
-# if debug is on, print the command
 if [[ "$_arg_debug" == "on" ]]; then
   echo "Running command: $COMMAND"
 fi
-
-# run the command
 eval $COMMAND
 
 # open the file if we are told to
