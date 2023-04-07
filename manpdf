@@ -7,7 +7,7 @@
 # ARG_POSITIONAL_SINGLE([name-or-file])
 # ARG_POSITIONAL_SINGLE([section],[],[""])
 # ARG_DEFAULTS_POS([])
-# ARG_HELP([ManPDF - Open a man page as a PDF file.],[ManPDF should work everywhere. The only requirements are: \n - A 'man' implementation ('man-db', 'mandoc', or even that old non-GPL implementation on macOS),\n - 'groff', and\n - 'open' or 'xdg-open' associated with an application that can open PDFs.],[h],[help],[Prints this help])
+# ARG_HELP([ManPDF - Open a man page as a PDF file.\n],[],[h],[help],[Prints this help])
 # ARG_VERSION([echo $(basename $0) 420.69])
 # ARGBASH_GO()
 # needed because of Argbash --> m4_ignore([
@@ -44,17 +44,14 @@ _arg_debug="off"
 
 print_help()
 {
-	printf '%s\n' "ManPDF - Open a man page as a PDF file."
+	printf '%s\n' "ManPDF - Open a man page as a PDF file.
+"
 	printf 'Usage: %s [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
 	printf '\t%s\n' "-o, --output: The output file (no default)"
 	printf '\t%s\n' "--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)"
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
 	printf '\t%s\n' "-h, --help: Prints this help"
 	printf '\t%s\n' "-v, --version: Prints version"
-	printf '\n%s\n' "ManPDF should work everywhere. The only requirements are:
- - A 'man' implementation ('man-db', 'mandoc', or even that old non-GPL implementation on macOS),
- - 'groff', and
- - 'open' or 'xdg-open' associated with an application that can open PDFs."
 }
 
 
