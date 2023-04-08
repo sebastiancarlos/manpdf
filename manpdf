@@ -199,7 +199,43 @@ COMMAND="groff -Tpdf -mandoc -c $FILE > $OUTPUT"
 if [[ "$_arg_debug" == "on" ]]; then
   echo "Running command: $COMMAND"
 fi
-eval $COMMAND
+eval $COMMAND 2>/dev/null
+
+# if it failed, assume the groff version doesn't have the pdf device
+# (i.e. "groff-base" on Debian) so try to run it with the ps device and
+# convert it to pdf.
+if [[ $? -ne 0 ]]; then
+  # convert to ps
+  PS_FILE="/tmp/$NAME.ps"
+  COMMAND="groff -Tps -mandoc -c $FILE > $PS_FILE"
+  if [[ "$_arg_debug" == "on" ]]; then
+    echo "manpdf: groff failed, trying with ps device"
+    echo "Running command: $COMMAND"
+  fi
+  eval $COMMAND 2>/dev/null
+
+  # If it failed again, there's nothing we can do
+  if [[ $? -ne 0 ]]; then
+    echo "groff failed, exiting"
+    exit 1
+  fi
+
+  # convert to pdf
+  COMMAND="ps2pdf $PS_FILE $OUTPUT"
+  if [[ "$_arg_debug" == "on" ]]; then
+    echo "Running command: $COMMAND"
+  fi
+  eval $COMMAND 2>/dev/null
+
+  # If ps2pdf failed, just rename the file to .pdf, which
+  # should be fine most of the time
+  if [[ $? -ne 0 ]]; then
+    if [[ "$_arg_debug" == "on" ]]; then
+      echo "manpdf: ps2pdf failed, renaming file to .pdf"
+    fi
+    mv $PS_FILE $OUTPUT
+  fi
+fi
 
 # open the file if we are told to
 if [[ "$_arg_open_pdf" == "on" ]]; then
