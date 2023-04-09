@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_SINGLE([output],[o],[The output file])
 # ARG_OPTIONAL_BOOLEAN([open-pdf],[],[Open the PDF file after creating it],[on])
 # ARG_OPTIONAL_BOOLEAN([debug],[d],[Print debug information too],[off])
-# ARG_POSITIONAL_SINGLE([name-or-file])
+# ARG_POSITIONAL_SINGLE([name-or-file],[You can pass either the name of the man page, a man page file, or "-" to read file from stdin])
 # ARG_POSITIONAL_SINGLE([section],[],[""])
 # ARG_DEFAULTS_POS([])
 # ARG_HELP([ManPDF - Open a man page as a PDF file.\n],[],[h],[help],[Prints this help])
@@ -47,6 +47,7 @@ print_help()
 	printf '%s\n' "ManPDF - Open a man page as a PDF file.
 "
 	printf 'Usage: %s [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
+	printf '\t%s\n' "<name-or-file>: You can pass either the name of the man page, a man page file, or \"-\" to read file from stdin"
 	printf '\t%s\n' "-o, --output: The output file (no default)"
 	printf '\t%s\n' "--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)"
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
@@ -149,9 +150,16 @@ assign_positional_args 1 "${_positionals[@]}"
 
 # vvv  PLACE YOUR CODE HERE  vvv
 
-# figure out if we're dealing with a name or a file
-FILE=""
-if [[ -f "$_arg_name_or_file" ]]; then
+# figure out if we're dealing with a name, a file, or stdin
+if [[ "$_arg_name_or_file" == "-" ]]; then
+  if [[ -t 0 ]]; then
+    echo "No file piped from stdin."
+    exit 1
+  else
+    FILE="/dev/stdin"
+    NAME="stdin"
+  fi
+elif [[ -f "$_arg_name_or_file" ]]; then
   NAME=$(basename "$_arg_name_or_file")
   FILE="$_arg_name_or_file"
 else
@@ -163,11 +171,6 @@ else
     MAN_ARGUMENTS="$SECTION $MAN_ARGUMENTS"
   fi
   FILE=$(man -w $MAN_ARGUMENTS)
-fi
-
-# if we don't have a file, exit
-if [[ -z "$FILE" ]]; then
-  exit 1
 fi
 
 # Some distros have gzipped man pages, so we need to gunzip it before

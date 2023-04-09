@@ -27,11 +27,12 @@ manpdf ls
 
 ```shell
 manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]
-        -o, --output: The output file (no default)
-        --open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)
-        -d, --debug, --no-debug: Print debug information too (off by default)
-        -h, --help: Prints this help
-        -v, --version: Prints version
+	<name-or-file>: You can pass either the name of the man page, a man page file, or "-" to read file from stdin
+	-o, --output: The output file (no default)
+	--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)
+	-d, --debug, --no-debug: Print debug information too (off by default)
+	-h, --help: Prints this help
+	-v, --version: Prints version
 ```
 
 ## Requirements
