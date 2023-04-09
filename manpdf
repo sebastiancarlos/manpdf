@@ -4,7 +4,7 @@
 # ARG_OPTIONAL_SINGLE([output],[o],[The output file])
 # ARG_OPTIONAL_BOOLEAN([open-pdf],[],[Open the PDF file after creating it],[on])
 # ARG_OPTIONAL_BOOLEAN([debug],[d],[Print debug information too],[off])
-# ARG_POSITIONAL_SINGLE([name-or-file],[You can pass either the name of the man page, a man page file, or "-" to read file from stdin])
+# ARG_POSITIONAL_SINGLE([name-or-file],[You can pass either the name of the man page, a man page file (local or URL), or "-" to read file from stdin])
 # ARG_POSITIONAL_SINGLE([section],[],[""])
 # ARG_DEFAULTS_POS([])
 # ARG_HELP([ManPDF - Open a man page as a PDF file.\n],[],[h],[help],[Prints this help])
@@ -47,7 +47,7 @@ print_help()
 	printf '%s\n' "ManPDF - Open a man page as a PDF file.
 "
 	printf 'Usage: %s [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
-	printf '\t%s\n' "<name-or-file>: You can pass either the name of the man page, a man page file, or \"-\" to read file from stdin"
+	printf '\t%s\n' "<name-or-file>: You can pass either the name of the man page, a man page file (local or URL), or \"-\" to read file from stdin"
 	printf '\t%s\n' "-o, --output: The output file (no default)"
 	printf '\t%s\n' "--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)"
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
@@ -150,8 +150,9 @@ assign_positional_args 1 "${_positionals[@]}"
 
 # vvv  PLACE YOUR CODE HERE  vvv
 
-# figure out if we're dealing with a name, a file, or stdin
+# figure out if we're dealing with a name, a file, a URL, or stdin
 if [[ "$_arg_name_or_file" == "-" ]]; then
+  # Handle stdin
   if [[ -t 0 ]]; then
     echo "No file piped from stdin."
     exit 1
@@ -159,10 +160,21 @@ if [[ "$_arg_name_or_file" == "-" ]]; then
     FILE="/dev/stdin"
     NAME="stdin"
   fi
+elif [[ "$_arg_name_or_file" == http* ]]; then
+  # Handle URL
+  # Use curl to download file (using Chrome user agent)
+  NAME=$(basename "$_arg_name_or_file")
+  FILE="/tmp/$NAME"
+  if [[ "$_arg_debug" == "on" ]]; then
+    echo "Downloading file: $_arg_name_or_file"
+  fi
+  curl -A 'Goggle/9.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Chrome/103.0.5060.71' -s "$_arg_name_or_file" > "$FILE"
 elif [[ -f "$_arg_name_or_file" ]]; then
+  # Handle file
   NAME=$(basename "$_arg_name_or_file")
   FILE="$_arg_name_or_file"
 else
+  # Handle name
   # use 'man -w' to get file, optionally passing section if provided
   NAME="$_arg_name_or_file"
   MAN_ARGUMENTS="$NAME"

@@ -17,17 +17,23 @@ Make sure that `$HOME/.local/bin` exists and is in your `$PATH`.
 
 ## Example
 
-To view the man page for `ls` in PDF format, run:
+To view the man page for `ls` (in your local machine) in PDF format, run:
 
 ```shell
 manpdf ls
 ```
 
+You can also pass a man page source file (local or URL). To view the man page for `ls` in the latest version of Arch, btw, run:
+
+```shell
+manpdf https://manned.org/raw/arch/ls.1
+````
+
 ## Usage
 
 ```shell
 manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]
-	<name-or-file>: You can pass either the name of the man page, a man page file, or "-" to read file from stdin
+	<name-or-file>: You can pass either the name of the man page, a man page file (local or URL), or "-" to read file from stdin
 	-o, --output: The output file (no default)
 	--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)
 	-d, --debug, --no-debug: Print debug information too (off by default)
