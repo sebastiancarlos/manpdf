@@ -17,13 +17,13 @@ Make sure that `$HOME/.local/bin` exists and is in your `$PATH`.
 
 ## Example
 
-To view the man page for `ls` (in your local machine) in PDF format, run:
+To view the man page for `ls` in PDF format, run:
 
 ```shell
 manpdf ls
 ```
 
-You can also pass a man page source file (local or URL). To view the man page for `ls` in the latest version of Arch, btw, run:
+You can also pass a man page source file (local or URL). Fox example, to view the man page for `ls` in the latest version of Arch, btw, run:
 
 ```shell
 manpdf https://manned.org/raw/arch/ls.1
