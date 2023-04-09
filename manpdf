@@ -150,7 +150,7 @@ assign_positional_args 1 "${_positionals[@]}"
 
 # vvv  PLACE YOUR CODE HERE  vvv
 
-# figure out if we're dealing with a name, a file, a URL, or stdin
+# Figure out if we're dealing with a name, a file, a URL, or stdin
 if [[ "$_arg_name_or_file" == "-" ]]; then
   # Handle stdin
   if [[ -t 0 ]]; then
@@ -160,7 +160,7 @@ if [[ "$_arg_name_or_file" == "-" ]]; then
     FILE="/dev/stdin"
     NAME="stdin"
   fi
-elif [[ "$_arg_name_or_file" == http* ]]; then
+elif [[ "$_arg_name_or_file" =~ ^https?:// ]]; then
   # Handle URL
   # Use curl to download file (using Chrome user agent)
   NAME=$(basename "$_arg_name_or_file")
