@@ -210,7 +210,7 @@ fi
 
 # run the command
 echo "Generating PDF for '$NAME'"
-COMMAND="groff -Tpdf -mandoc -c -t $FILE > $OUTPUT"
+COMMAND="groff -Tpdf -mandoc -c -t -k $FILE > $OUTPUT"
 if [[ "$_arg_debug" == "on" ]]; then
   echo "Running command: $COMMAND"
 fi
@@ -222,7 +222,7 @@ eval $COMMAND 2>/dev/null
 if [[ $? -ne 0 ]]; then
   # convert to ps
   PS_FILE="/tmp/$NAME.ps"
-  COMMAND="groff -Tps -mandoc -c -t $FILE > $PS_FILE"
+  COMMAND="groff -Tps -mandoc -c -t -k $FILE > $PS_FILE"
   if [[ "$_arg_debug" == "on" ]]; then
     echo "manpdf: groff failed, trying with ps device"
     echo "Running command: $COMMAND"
