@@ -210,7 +210,7 @@ fi
 
 # run the command
 echo "Generating PDF for '$NAME'"
-COMMAND="groff -Tpdf -mandoc -c t $FILE > $OUTPUT"
+COMMAND="groff -Tpdf -mandoc -c -t $FILE > $OUTPUT"
 if [[ "$_arg_debug" == "on" ]]; then
   echo "Running command: $COMMAND"
 fi
