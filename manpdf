@@ -175,7 +175,7 @@ elif [[ -f "$_arg_name_or_file" ]]; then
   FILE="$_arg_name_or_file"
 else
   # Handle name
-  # use 'man -w' to get file, optionally passing section if provided
+  # try to use 'man -w' to get file, optionally passing section if provided
   NAME="$_arg_name_or_file"
   MAN_ARGUMENTS="$NAME"
   SECTION="$_arg_section"
@@ -183,6 +183,11 @@ else
     MAN_ARGUMENTS="$SECTION $MAN_ARGUMENTS"
   fi
   FILE=$(man -w $MAN_ARGUMENTS)
+  
+  # If man command failed, exit
+  if [[ $? -ne 0 ]]; then
+    exit 1
+  fi
 fi
 
 # Some distros have gzipped man pages, so we need to gunzip it before
