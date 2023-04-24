@@ -157,8 +157,14 @@ if [[ "$_arg_name_or_file" == "-" ]]; then
     echo "No file piped from stdin."
     exit 1
   else
-    FILE="/dev/stdin"
-    NAME="stdin"
+    FILE=$(mktemp)
+    cat /dev/stdin > $FILE
+
+    # try to get name from file, if not found, default to "stdin"
+    NAME="$(grep -m 1 -e '\.Nm' -e '\.TH' $FILE | awk '{print $2}')"
+    if [[ -z "$NAME" ]]; then
+      NAME="stdin"
+    fi
   fi
 elif [[ "$_arg_name_or_file" =~ ^https?:// ]]; then
   # Handle URL
