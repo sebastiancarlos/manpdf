@@ -1,16 +1,17 @@
-# 💪📄 ManPDF
+# 💪📄 ManPDF & ManWEB 💪🌎
 
 ![man-pdf](https://user-images.githubusercontent.com/88276600/230772238-78562f6a-d0ea-4b91-88b1-0b5c52fb7adf.png)
 
-Read your Man pages in PDF format.
+Read your Man pages in PDF format. Even Online!
 
 ## Installation
 
-Download the script and make it executable by running:
+Download the scripts and make them executable by running:
 
 ```shell
-curl https://raw.githubusercontent.com/sebastiancarlos/manpdf/main/manpdf --create-dirs -o $HOME/.local/bin/manpdf
-chmod +x $HOME/.local/bin/manpdf
+git clone https://github.com/sebastiancarlos/manpdf
+mv manpdf/manpdf $HOME/.local/bin && chmod +x $HOME/.local/bin/manpdf
+mv manpdf/manweb $HOME/.local/bin && chmod +x $HOME/.local/bin/manweb
 ```
 
 Make sure that `$HOME/.local/bin` exists and is in your `$PATH`.
@@ -23,10 +24,16 @@ To view the man page for `ls` in PDF format, run:
 manpdf ls
 ```
 
-You can also pass a man page source file (local or URL). Fox example, to view the man page for `ls` in the latest version of Arch, btw, run:
+You can download a man page from the web. Fox example, to view the man page for `systemd` in the latest version of Arch, btw, run:
 
 ```shell
-manpdf https://manned.org/raw/arch/ls.1
+manweb systemd
+````
+
+This also supports PDF
+
+```shell
+manweb systemd --pdf
 ````
 
 ## Usage
@@ -41,6 +48,26 @@ manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|-
 	-v, --version: Prints version
 ```
 
+```shell
+ManWEB - Open a man page from Manned.org
+
+manweb [-p|--(no-)pdf] [-w|--(no-)where] [-d|--(no-)debug] [-t|--(no-)try-local]
+    [-o|--output <arg>] [-h|--help] <name-or-url> [<section>]\n
+    <name-or-url>: You can pass either the name of the man page, the URL to a
+            manned.org page, or the URL to any raw man page in roff format (hosted at manned.org or not)
+    -p, --pdf, --no-pdf: If passed, the script will not open the man page, it will just open it
+            as a PDF. (off by default)
+    -w, --where, --no-where: Don't actually show the man page, but print the URL of the matching
+            page, if found. (off by default)
+    -d, --debug, --no-debug: Print debug information too (off by default)
+    -t, --try-local, --no-try-local: If there's a local man page available, don't try to fetch
+            from network (on by default)
+    -o, --output: The output file. If passed, the script will not open the man page, it will just
+            save it to disk in roff format. When combined with the --pdf option, it will save the PDF to
+            the provided filename. (no default)
+    -h, --help: Prints this help
+```
+
 ## Requirements
 
 ManPDF should work everywhere. The only requirements are:
@@ -52,6 +79,7 @@ ManPDF should work everywhere. The only requirements are:
 ## Thanks to
 - [Argbash](https://argbash.io/) for generating the CLI parser.
 - [Groff](https://www.gnu.org/software/groff/) for generating the PDF.
+- [Manned.org](https://manned.org/) for the best online man pages.
 
 ## Related repositories
 - [manpdf-web](https://github.com/sebastiancarlos/manpdf-web): The [website](https://manpdf.pro) for ManPDF.
