@@ -191,17 +191,20 @@ if [[ "$_arg_debug" == "on" ]]; then
     DEBUG=1
 fi
 
+# Assume that we want silent output if --where was passed
+SILENT=0
+if [[ "$_arg_where" == "on" ]]; then
+    SILENT=1
+fi
+
 # Figure out if we're dealing with a name or a URL
 if [[ "$_arg_name_or_url" =~ ^https?://.* ]]; then
     # We're dealing with a URL
     URL="$_arg_name_or_url"
 
-    echo "URL: $URL"
 
     if [[ "$URL" =~ ^https?://manned.org/.* ]]; then
         # We're dealing with a manned.org URL
-        echo "manned.org URL"
-
         # If the URL contains a single path "/man/", we need to replace it with
         # "/raw/"
         if [[ "$URL" =~ .*/man/.* ]]; then
@@ -209,7 +212,7 @@ if [[ "$_arg_name_or_url" =~ ^https?://.* ]]; then
         fi
     fi
 
-    # get name and section from the last part of the URL, after the last slash
+    # Get name and section from the last part of the URL, after the last slash
     # /NAME.SECTION
     LAST_PATH=$(sed -e 's/.*\///g' <<< "$URL")
     NAME=$(sed -e 's/\..*//g' <<< "$LAST_PATH")
@@ -238,7 +241,9 @@ else
         FILE=$(eval "$COMMAND")
         # handle local file
         if [[ -f "$FILE" ]]; then
-            echo "File exists locally: $FILE"
+            if [[ "$SILENT" == "0" ]]; then
+                echo "File exists locally: $FILE"
+            fi
             if [[ "$_arg_where" == "on" ]]; then
                 echo "$FILE"
                 exit 0
@@ -251,26 +256,27 @@ else
             fi
         fi
         # handle no local file
-        echo "File does not exist locally. Attempting to download"
+        if [[ "$SILENT" == "0" ]]; then
+            echo "File does not exist locally. Attempting to download"
+        fi
     fi
 
     # generate raw roff URL
     URL="https://manned.org/raw/$NAME.$SECTION"
 fi
 
-# if --where is provided, just print the URL and exit
-if [[ "$_arg_where" == "on" ]]; then
-    echo "$URL"
-    exit 0
-fi
 
 # fetch from url
 FILE="/tmp/$NAME.$SECTION"
-echo "Downloading file: $URL"
+if [[ "$DEBUG" == "1" ]]; then
+    echo "Downloading file: $URL"
+fi
 curl -f -A 'goggle/9.0 (x11; linux x86_64; rv:60.0) gecko/20100101 chrome/103.0.5060.71' -s "$URL" > "$FILE"
 # exit on 404
 if [[ "$?" == "22" ]]; then
-    echo "Online man page not found"
+    if [[ "$SILENT" == "0" ]]; then
+        echo "Online man page not found"
+    fi
     exit 1
 fi
 
@@ -282,6 +288,16 @@ fi
 
 if [[ "$DEBUG" == "1" ]]; then
     echo "File saved to: $FILE"
+fi
+
+if [[ "$SILENT" == "0" ]]; then
+    echo "Downloaded file: $URL"
+fi
+
+# if --where is provided, just print the URL and exit
+if [[ "$_arg_where" == "on" ]]; then
+    echo "$URL"
+    exit 0
 fi
 
 # if requested, render to terminal
