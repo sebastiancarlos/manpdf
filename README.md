@@ -38,7 +38,7 @@ manweb systemd --pdf
 
 ## Usage
 
-```shell
+```
 manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]
 	<name-or-file>: You can pass either the name of the man page, a man page file (local or URL), or "-" to read file from stdin
 	-o, --output: The output file (no default)
@@ -48,7 +48,7 @@ manpdf [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|-
 	-v, --version: Prints version
 ```
 
-```shell
+```
 ManWEB - Open a man page from Manned.org
 
 manweb [-p|--(no-)pdf] [-w|--(no-)where] [-d|--(no-)debug] [-t|--(no-)try-local]
