@@ -165,7 +165,7 @@ assign_positional_args 1 "${_positionals[@]}"
 if [[ "$_arg_name_or_file" == "-" ]]; then
   # Handle stdin
   if [[ -t 0 ]]; then
-    echo "No file piped from stdin."
+    echo "No file piped from stdin." 1>&2
     exit 1
   else
     FILE=$(mktemp)
@@ -253,7 +253,7 @@ if [[ $? -ne 0 ]]; then
 
   # If it failed again, there's nothing we can do
   if [[ $? -ne 0 ]]; then
-    echo "groff failed, exiting"
+    echo "groff failed, exiting" 1>&2
     exit 1
   fi
 

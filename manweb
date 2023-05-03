@@ -279,14 +279,14 @@ curl -f -A 'goggle/9.0 (x11; linux x86_64; rv:60.0) gecko/20100101 chrome/103.0.
 # exit on 404
 if [[ "$?" == "22" ]]; then
     if [[ "$SILENT" == "0" ]]; then
-        echo "Online man page not found"
+        echo "Online man page not found" 1>&2
     fi
     exit 1
 fi
 
 # exit on error
 if [[ "$?" != "0" ]]; then
-    echo "Error downloading online man page"
+    echo "Error downloading online man page" 1>&2
     exit 1
 fi
 
@@ -341,7 +341,7 @@ if [[ "$_arg_pdf" == "on" ]]; then
         eval "$man_command"
         exit 0
     else
-        echo "Manpdf not found. Please install it to render to pdf"
+        echo "Manpdf not found. Please install it to render to pdf" 1>&2
         exit 1
     fi
 fi
