@@ -6,6 +6,7 @@
 # ARG_OPTIONAL_BOOLEAN([debug],[d],[Print debug information too],[off])
 # ARG_OPTIONAL_BOOLEAN([try-local],[t],[If there's a local man page available, don't try to fetch from network],[on])
 # ARG_OPTIONAL_SINGLE([output],[o],[The output file. If passed, the script will not open the man page, it will just save it to disk in roff format. When combined with the --pdf option, it will save the PDF to the provided filename.])
+# ARG_OPTIONAL_SINGLE([pdf-viewer],[],[The command to open the PDF file (defaults to "xdg-open" or "open" if not provided)])
 # ARG_POSITIONAL_SINGLE([name-or-url],[You can pass either the name of the man page, the URL to a manned.org page, or the URL to any raw man page in roff format (hosted at manned.org or not)])
 # ARG_POSITIONAL_SINGLE([section],[],[""])
 # ARG_DEFAULTS_POS([])
@@ -43,26 +44,21 @@ _arg_where="off"
 _arg_debug="off"
 _arg_try_local="on"
 _arg_output=
+_arg_pdf_viewer=
 
 
 print_help()
 {
 	printf '%s\n' "ManWEB - Open a man page from Manned.org
 "
-	printf 'Usage: %s [-p|--(no-)pdf] [-w|--(no-)where] [-d|--(no-)debug] [-t|--(no-)try-local]\n' "$0"
-        printf '\t%s\n' "[-o|--output <arg>] [-h|--help] <name-or-url> [<section>]\n"
-	printf '\t%s\n' "<name-or-url>: You can pass either the name of the man page, the URL to a" 
-        printf '\t\t%s\n' "manned.org page, or the URL to any raw man page in roff format (hosted at manned.org or not)"
-	printf '\t%s\n' "-p, --pdf, --no-pdf: If passed, the script will not open the man page, it will just open it"
-        printf '\t\t%s\n' "as a PDF. (off by default)"
-	printf '\t%s\n' "-w, --where, --no-where: Don't actually show the man page, but print the URL of the matching"
-        printf '\t\t%s\n' "page, if found. (off by default)"
+	printf 'Usage: %s [-p|--(no-)pdf] [-w|--(no-)where] [-d|--(no-)debug] [-t|--(no-)try-local] [-o|--output <arg>] [--pdf-viewer <arg>] [-h|--help] <name-or-url> [<section>]\n' "$0"
+	printf '\t%s\n' "<name-or-url>: You can pass either the name of the man page, the URL to a manned.org page, or the URL to any raw man page in roff format (hosted at manned.org or not)"
+	printf '\t%s\n' "-p, --pdf, --no-pdf: If passed, the script will not open the man page, it will just open it as a PDF. (off by default)"
+	printf '\t%s\n' "-w, --where, --no-where: Don't actually show the man page, but print the URL of the matching page, if found. (off by default)"
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
-	printf '\t%s\n' "-t, --try-local, --no-try-local: If there's a local man page available, don't try to fetch"
-        printf '\t\t%s\n' "from network (on by default)"
-	printf '\t%s\n' "-o, --output: The output file. If passed, the script will not open the man page, it will just"
-        printf '\t\t%s\n' "save it to disk in roff format. When combined with the --pdf option, it will save the PDF to"
-        printf '\t\t%s\n' "the provided filename. (no default)"
+	printf '\t%s\n' "-t, --try-local, --no-try-local: If there's a local man page available, don't try to fetch from network (on by default)"
+	printf '\t%s\n' "-o, --output: The output file. If passed, the script will not open the man page, it will just save it to disk in roff format. When combined with the --pdf option, it will save the PDF to the provided filename. (no default)"
+	printf '\t%s\n' "--pdf-viewer: The command to open the PDF file (defaults to \"xdg-open\" or \"open\" if not provided) (no default)"
 	printf '\t%s\n' "-h, --help: Prints this help"
 }
 
@@ -132,6 +128,14 @@ parse_commandline()
 				;;
 			-o*)
 				_arg_output="${_key##-o}"
+				;;
+			--pdf-viewer)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_pdf_viewer="$2"
+				shift
+				;;
+			--pdf-viewer=*)
+				_arg_pdf_viewer="${_key##--pdf-viewer=}"
 				;;
 			-h|--help)
 				print_help
@@ -324,10 +328,17 @@ if [[ "$_arg_pdf" == "on" ]]; then
             echo "Saved to $OUTPUT"
             exit 0
         fi
-        if [[ "$DEBUG" == "1" ]]; then
-            echo "Rendering to pdf with: manpdf $FILE"
+
+        # if pdf-viewer is provided, add it as an option to manpdf
+        manpdf_options=""
+        if [[ -n "$_arg_pdf_viewer" ]]; then
+            manpdf_options="--pdf-viewer $_arg_pdf_viewer"
         fi
-        manpdf "$FILE"
+        man_command="manpdf $manpdf_options $FILE"
+        if [[ "$DEBUG" == "1" ]]; then
+            echo "Rendering to pdf with: $man_command"
+        fi
+        eval "$man_command"
         exit 0
     else
         echo "Manpdf not found. Please install it to render to pdf"

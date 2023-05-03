@@ -2,6 +2,7 @@
 
 # Created by argbash-init v2.10.0
 # ARG_OPTIONAL_SINGLE([output],[o],[The output file])
+# ARG_OPTIONAL_SINGLE([pdf-viewer],[],[The command to open the PDF file (defaults to "xdg-open" or "open" if not provided)])
 # ARG_OPTIONAL_BOOLEAN([open-pdf],[],[Open the PDF file after creating it],[on])
 # ARG_OPTIONAL_BOOLEAN([debug],[d],[Print debug information too],[off])
 # ARG_POSITIONAL_SINGLE([name-or-file],[You can pass either the name of the man page, a man page file (local or URL), or "-" to read file from stdin])
@@ -38,6 +39,7 @@ _arg_name_or_file=
 _arg_section=""
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_output=
+_arg_pdf_viewer=
 _arg_open_pdf="on"
 _arg_debug="off"
 
@@ -46,9 +48,10 @@ print_help()
 {
 	printf '%s\n' "ManPDF - Open a man page as a PDF file.
 "
-	printf 'Usage: %s [-o|--output <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
+	printf 'Usage: %s [-o|--output <arg>] [--pdf-viewer <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
 	printf '\t%s\n' "<name-or-file>: You can pass either the name of the man page, a man page file (local or URL), or \"-\" to read file from stdin"
 	printf '\t%s\n' "-o, --output: The output file (no default)"
+	printf '\t%s\n' "--pdf-viewer: The command to open the PDF file (defaults to \"xdg-open\" or \"open\" if not provided) (no default)"
 	printf '\t%s\n' "--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)"
 	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
 	printf '\t%s\n' "-h, --help: Prints this help"
@@ -73,6 +76,14 @@ parse_commandline()
 				;;
 			-o*)
 				_arg_output="${_key##-o}"
+				;;
+			--pdf-viewer)
+				test $# -lt 2 && die "Missing value for the optional argument '$_key'." 1
+				_arg_pdf_viewer="$2"
+				shift
+				;;
+			--pdf-viewer=*)
+				_arg_pdf_viewer="${_key##--pdf-viewer=}"
 				;;
 			--no-open-pdf|--open-pdf)
 				_arg_open_pdf="on"
@@ -189,7 +200,7 @@ else
     MAN_ARGUMENTS="$SECTION $MAN_ARGUMENTS"
   fi
   FILE=$(man -w $MAN_ARGUMENTS)
-  
+
   # If man command failed, exit
   if [[ $? -ne 0 ]]; then
     exit 1
@@ -266,18 +277,23 @@ fi
 # open the file if we are told to
 if [[ "$_arg_open_pdf" == "on" ]]; then
   # ƒigure out which program to use to open the file
-  # if open is not available, try xdg-open
-  OPEN="open"
-  if ! command -v $OPEN &> /dev/null; then
-    OPEN="xdg-open"
+  if [[ -n "$_arg_pdf_viewer" ]]; then
+    # if pdf viewer is explicitly passed, use that
+    pdf_viewer="$_arg_pdf_viewer"
+  else
+    # use open or, if not available, xdg-open
+    pdf_viewer="open"
+    if ! command -v $pdf_viewer &> /dev/null; then
+      pdf_viewer="xdg-open"
+    fi
   fi
 
   # if debug is on, print the open program
   if [[ "$_arg_debug" == "on" ]]; then
-    echo "Opening PDF with: $OPEN"
+    echo "Opening PDF with: $pdf_viewer"
   fi
 
-  $OPEN $OUTPUT
+  $pdf_viewer $OUTPUT
 fi
 
 # ^^^  TERMINATE YOUR CODE BEFORE THE BOTTOM ARGBASH MARKER  ^^^
