@@ -206,7 +206,6 @@ if [[ "$_arg_name_or_url" =~ ^https?://.* ]]; then
     # We're dealing with a URL
     URL="$_arg_name_or_url"
 
-
     if [[ "$URL" =~ ^https?://manned.org/.* ]]; then
         # We're dealing with a manned.org URL
         # If the URL contains a single path "/man/", we need to replace it with
@@ -264,24 +263,43 @@ else
             echo "File does not exist locally. Attempting to download"
         fi
     fi
-
-    # generate raw roff URL
-    URL="https://manned.org/raw/$NAME.$SECTION"
 fi
 
+# same as the one used on man-db
+declare -a section_search_order=("1" "8" "3" "2" "5" "4" "9" "6" "7")
 
 # fetch from url
-FILE="/tmp/$NAME.$SECTION"
-if [[ "$DEBUG" == "1" ]]; then
-    echo "Downloading file: $URL"
-fi
-curl -f -A 'goggle/9.0 (x11; linux x86_64; rv:60.0) gecko/20100101 chrome/103.0.5060.71' -s "$URL" > "$FILE"
-# exit on 404
-if [[ "$?" == "22" ]]; then
-    if [[ "$SILENT" == "0" ]]; then
+download_file() {
+  FILE="/tmp/$1.$2"
+  URL="https://manned.org/raw/$1.$2"
+  if [[ "$DEBUG" == "1" ]]; then
+      echo "Downloading file: $URL"
+  fi
+  curl -f -A 'goggle/9.0 (x11; linux x86_64; rv:60.0) gecko/20100101 chrome/103.0.5060.71' -s "$URL" > "$FILE"
+  return $?
+}
+
+# if a section was explicitly provided
+if [[ -n "$_arg_section" ]]; then
+    download_file $NAME $SECTION
+    if [[ "$?" == "22" ]]; then
         echo "Online man page not found" 1>&2
+        exit 1
     fi
-    exit 1
+else
+    # try every section in the provided order
+    for i in "${section_search_order[@]}"; do
+        if [[ "$DEBUG" == "1" ]]; then
+            echo "Trying section $i"
+        fi
+        SECTION=$i
+        download_file $NAME $SECTION
+        if [[ "$?" == "0" ]]; then
+            break
+        elif [[ "$?" == "22" ]] && [[ "$SILENT" == "0" ]]; then
+            echo "Online man page not found" 1>&2
+        fi
+    done
 fi
 
 # exit on error
