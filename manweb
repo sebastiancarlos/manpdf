@@ -270,8 +270,8 @@ declare -a section_search_order=("1" "8" "3" "2" "5" "4" "9" "6" "7")
 
 # fetch from url
 download_file() {
-  FILE="/tmp/$1.$2"
-  URL="https://manned.org/raw/$1.$2"
+  local FILE="/tmp/$1.$2"
+  local URL="https://manned.org/raw/$1.$2"
   if [[ "$DEBUG" == "1" ]]; then
       echo "Downloading file: $URL"
   fi
@@ -286,6 +286,8 @@ if [[ -n "$_arg_section" ]]; then
         echo "Online man page not found" 1>&2
         exit 1
     fi
+    FILE="/tmp/$NAME.$SECTION"
+    URL="https://manned.org/raw/$NAME.$SECTION"
 else
     # try every section in the provided order
     for i in "${section_search_order[@]}"; do
@@ -295,6 +297,8 @@ else
         SECTION=$i
         download_file $NAME $SECTION
         if [[ "$?" == "0" ]]; then
+            FILE="/tmp/$NAME.$SECTION"
+            URL="https://manned.org/raw/$NAME.$SECTION"
             break
         elif [[ "$?" == "22" ]] && [[ "$SILENT" == "0" ]]; then
             echo "Online man page not found" 1>&2
@@ -315,6 +319,33 @@ fi
 if [[ "$SILENT" == "0" ]]; then
     echo "Downloaded file: $URL"
 fi
+
+# Post-process file:
+# For every line of the form ".so directory/name.section", download the
+# required man page and insert its content in place of the line (non recursive)
+so_lines=$(grep -E '^\.so .*$' "$FILE")
+for so_line in "$so_lines"; do
+    if [[ "$DEBUG" == "1" ]]; then
+        echo "Processing .so line: $so_line"
+    fi
+    
+    # so_file is eveything afte the last /
+    so_file=$(echo "$so_line" | sed -e 's/.*\///g')
+    so_file_name=$(echo "$so_file" | sed -e 's/\..*//g')
+    so_file_section=$(echo "$so_file" | sed -e 's/.*\.//g')
+    
+    # download the file
+    download_file "$so_file_name" "$so_file_section"
+ 
+    # replace the line with the content of the file:
+    # 1. print all lines up to the line
+    # 2. print the content of the file
+    # 3. print all lines after the line
+    sed '\=+^'"${so_line}"'$=q' "$FILE" | sed '$d' > /tmp/manpage
+    cat "/tmp/$so_file_name.$so_file_section" >> /tmp/manpage
+    sed -E '1,\=^'"${so_line}"'$=d' "$FILE" >> /tmp/manpage
+    mv /tmp/manpage "$FILE"
+done
 
 # if --where is provided, just print the URL and exit
 if [[ "$_arg_where" == "on" ]]; then
