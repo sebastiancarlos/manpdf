@@ -271,6 +271,17 @@ declare -a section_search_order=("1" "8" "3" "2" "5" "4" "9" "6" "7")
 # fetch from url
 download_file() {
   local FILE="/tmp/$1.$2"
+
+  # if the file already exists and it's not empty (thereby suggesting an error
+  # in the previous attempt) don't download it again
+  if [[ -f "$FILE" ]] && [[ -s "$FILE" ]]; then
+      if [[ "$DEBUG" == "1" ]]; then
+          echo "File already cached, skipping download: $FILE"
+      fi
+
+      return 0
+  fi
+
   local URL="https://manned.org/raw/$1.$2"
   if [[ "$DEBUG" == "1" ]]; then
       echo "Downloading file: $URL"
@@ -299,6 +310,14 @@ else
         if [[ "$?" == "0" ]]; then
             FILE="/tmp/$NAME.$SECTION"
             URL="https://manned.org/raw/$NAME.$SECTION"
+
+            # If file is found in a section which is not section one, create a
+            # symbolic link from the page.1 to the found one so that successive
+            # invokation of the script will use the cached version
+            if [[ "$SECTION" != "1" ]]; then
+                ln -sf "$FILE" "/tmp/$NAME.1"
+            fi
+
             break
         elif [[ "$?" == "22" ]] && [[ "$SILENT" == "0" ]]; then
             echo "Online man page not found" 1>&2
@@ -324,7 +343,13 @@ fi
 # For every line of the form ".so directory/name.section", download the
 # required man page and insert its content in place of the line (non recursive)
 so_lines=$(grep -E '^\.so .*$' "$FILE")
+
 for so_line in "$so_lines"; do
+    # exit if the line is empty 
+    if [[ -z "$so_line" ]]; then
+        continue
+    fi
+
     if [[ "$DEBUG" == "1" ]]; then
         echo "Processing .so line: $so_line"
     fi
