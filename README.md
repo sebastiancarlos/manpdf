@@ -10,11 +10,17 @@ Download the scripts and make them executable by running:
 
 ```shell
 git clone https://github.com/sebastiancarlos/manpdf
-mv manpdf/manpdf $HOME/.local/bin && chmod +x $HOME/.local/bin/manpdf
-mv manpdf/manweb $HOME/.local/bin && chmod +x $HOME/.local/bin/manweb
+cd manpdf
+make
 ```
 
-Make sure that `$HOME/.local/bin` exists and is in your `$PATH`.
+This will install by default in `/usr/local/bin`, which should be on your `$PATH`.
+
+If you want to install in another location, like `$HOME/.local/bin`, run `make prefix=~/.local`. 
+
+## Uninstallation
+
+Simply run `make uninstall`.
 
 ## Example
 

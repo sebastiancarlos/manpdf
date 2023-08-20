@@ -232,6 +232,7 @@ fi
 
 # run the command
 echo "Generating PDF for '$NAME'"
+
 COMMAND="groff -Tpdf -mandoc -c -t -k $FILE > $OUTPUT"
 if [[ "$_arg_debug" == "on" ]]; then
   echo "Running command: $COMMAND"

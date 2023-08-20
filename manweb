@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Created by argbash-init v2.10.0
 # ARG_OPTIONAL_BOOLEAN([pdf],[p],[If passed, the script will not open the man page, it will just open it as a PDF.])
