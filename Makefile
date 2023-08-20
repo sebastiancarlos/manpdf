@@ -13,9 +13,6 @@ exec_prefix := $(prefix)
 # Executables
 bindir := $(exec_prefix)/bin
 
-# Root of read-only data
-datarootdir := $(prefix)/share
-
 # Set space as the recipe prefix, instead of tab
 # Note: It also works with multiple spaces before the recipe text
 empty :=
