@@ -119,7 +119,6 @@ manpdf [OPTIONS] <name-or-file> [<section>]
 - [ ] Smart relevance detection by cross-referencing other data besides manned.org
 - [ ] Improved search results experience for multiple matches or similar results.
 - [ ] Social feature, voting for man page of the day.
-- [ ] Seriously ponder over the offer by Pandoc to buy this app.
 - [ ] Buy Adobe. The company, not the software.
 - [ ] Improve support for non-standard man page section names.
 
