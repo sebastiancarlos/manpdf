@@ -8,15 +8,13 @@ https://github.com/sebastiancarlos/manpdf/assets/88276600/0ca95ba0-54a8-4113-82f
 
 ## Installation
 
-Download the scripts and make them executable by running:
-
 ```shell
 git clone https://github.com/sebastiancarlos/manpdf
 cd manpdf
 make
 ```
 
-This will install by default in `/usr/local/bin`, which should be on your `$PATH`.
+This will install the scripts `manpdf` and `manweb` in `/usr/local/bin`, which should be in your `$PATH`.
 
 If you want to install in another location, like `$HOME/.local/bin`, run `make prefix=~/.local`. 
 
