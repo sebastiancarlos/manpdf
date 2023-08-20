@@ -46,20 +46,42 @@ _arg_try_local="on"
 _arg_output=
 _arg_pdf_viewer=
 
-
+# print the above 
 print_help()
 {
 	printf '%s\n' "ManWEB - Open a man page from Manned.org
 "
-	printf 'Usage: %s [-p|--(no-)pdf] [-w|--(no-)where] [-d|--(no-)debug] [-t|--(no-)try-local] [-o|--output <arg>] [--pdf-viewer <arg>] [-h|--help] <name-or-url> [<section>]\n' "$0"
-	printf '\t%s\n' "<name-or-url>: You can pass either the name of the man page, the URL to a manned.org page, or the URL to any raw man page in roff format (hosted at manned.org or not)"
-	printf '\t%s\n' "-p, --pdf, --no-pdf: If passed, the script will not open the man page, it will just open it as a PDF. (off by default)"
-	printf '\t%s\n' "-w, --where, --no-where: Don't actually show the man page, but print the URL of the matching page, if found. (off by default)"
-	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
-	printf '\t%s\n' "-t, --try-local, --no-try-local: If there's a local man page available, don't try to fetch from network (on by default)"
-	printf '\t%s\n' "-o, --output: The output file. If passed, the script will not open the man page, it will just save it to disk in roff format. When combined with the --pdf option, it will save the PDF to the provided filename. (no default)"
-	printf '\t%s\n' "--pdf-viewer: The command to open the PDF file (defaults to \"xdg-open\" or \"open\" if not provided) (no default)"
-	printf '\t%s\n' "-h, --help: Prints this help"
+	printf 'Usage: %s [OPTIONS] <name-or-url> [<section>]\n' "$0"
+	printf '\t%s\n' "<name-or-url>:"
+        printf '\t\t%s\n' "You can pass either the name of the man page, the url to a"
+        printf '\t\t%s\n' "manned.org page, or the URL to any raw man page in roff format"
+        printf '\t\t%s\n' "(hosted at manned.org or not)"
+	printf '\t%s\n' '-p, --pdf, --no-pdf:'
+	printf '\t\t%s\n' "if passed, the script will not open the man page on the terminal,"
+	printf '\t\t%s\n' "it will just open it as a pdf."
+	printf '\t\t%s\n' "(off by default)"
+	printf '\t%s\n' '-w, --where, --no-where:'
+	printf '\t\t%s\n' "don't actually show the man page, but print the url of the matching"
+	printf '\t\t%s\n' "page, if found."
+	printf '\t\t%s\n' "(off by default)"
+	printf '\t%s\n' '-d, --debug, --no-debug:'
+	printf '\t\t%s\n' "print debug information too."
+	printf '\t\t%s\n' "(off by default)"
+	printf '\t%s\n' '-t, --try-local, --no-try-local:'
+	printf '\t\t%s\n' "if there's a local man page available, don't try to fetch from"
+	printf '\t\t%s\n' "network."
+	printf '\t\t%s\n' "(on by default)"
+	printf '\t%s\n' '-o, --output:'
+	printf '\t\t%s\n' "the output file. if passed, the script will not open the man page,"
+	printf '\t\t%s\n' "it will just save it to disk in roff format. when combined with the"
+	printf '\t\t%s\n' "--pdf option, it will save the pdf to the provided filename."
+	printf '\t\t%s\n' "(no default)"
+	printf '\t%s\n' '--pdf-viewer:'
+	printf '\t\t%s\n' "the command to open the pdf file."
+	printf '\t\t%s\n' "(defaults to 'xdg-open' or 'open' if not provided)"
+	printf '\t\t%s\n' "(no default)"
+	printf '\t%s\n' '-h, --help:'
+	printf '\t\t%s\n' "prints this help."
 }
 
 

@@ -43,19 +43,30 @@ _arg_pdf_viewer=
 _arg_open_pdf="on"
 _arg_debug="off"
 
-
 print_help()
 {
 	printf '%s\n' "ManPDF - Open a man page as a PDF file.
 "
-	printf 'Usage: %s [-o|--output <arg>] [--pdf-viewer <arg>] [--(no-)open-pdf] [-d|--(no-)debug] [-h|--help] [-v|--version] <name-or-file> [<section>]\n' "$0"
-	printf '\t%s\n' "<name-or-file>: You can pass either the name of the man page, a man page file (local or URL), or \"-\" to read file from stdin"
-	printf '\t%s\n' "-o, --output: The output file (no default)"
-	printf '\t%s\n' "--pdf-viewer: The command to open the PDF file (defaults to \"xdg-open\" or \"open\" if not provided) (no default)"
-	printf '\t%s\n' "--open-pdf, --no-open-pdf: Open the PDF file after creating it (on by default)"
-	printf '\t%s\n' "-d, --debug, --no-debug: Print debug information too (off by default)"
-	printf '\t%s\n' "-h, --help: Prints this help"
-	printf '\t%s\n' "-v, --version: Prints version"
+	printf 'Usage: %s [OPTIONS] <name-or-file> [<section>]\n' "$0"
+	printf '\t%s\n' "<name-or-file>:"
+        printf '\t\t%s\n' "You can pass either the name of the man page, a man page file"
+	printf '\t\t%s\n' "(local or URL), or '-' to read file from stdin."
+	printf '\t%s\n' "-o, --output:"
+	printf '\t\t%s\n' "The output file."
+	printf '\t\t%s\n' "(defaults to temporary file)"
+	printf '\t%s\n' "--pdf-viewer:"
+	printf '\t\t%s\n' "The command to open the PDF file."
+	printf '\t\t%s\n' "(defaults to 'xdg-open' or 'open' if not provided)"
+	printf '\t%s\n' "--open-pdf, --no-open-pdf:"
+	printf '\t\t%s\n' "Open the PDF file after creating it"
+	printf '\t\t%s\n' "(on by default)"
+	printf '\t%s\n' "-d, --debug, --no-debug:"
+	printf '\t\t%s\n' "Print debug information too."
+	printf '\t\t%s\n' "(off by default)"
+	printf '\t%s\n' "-h, --help:"
+	printf '\t\t%s\n' "Prints this help."
+	printf '\t%s\n' "-v, --version:"
+	printf '\t\t%s\n' "Prints version."
 }
 
 
