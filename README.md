@@ -105,6 +105,24 @@ manpdf [OPTIONS] <name-or-file> [<section>]
 		Prints version.
 ```
 
+## Coming soon
+- [ ] Customizable PDF fonts.
+- [ ] Improve locale search (integration with `man-pages-l10n`)
+- [ ] Post-processing to remove PDF artifacts caused by common roff file inaccuracies.
+- [ ] Optionally inject `tldr` content to the top of the PDF file.
+- [ ] Suggest Info page if the search term is GNU tool or similar.
+- [ ] Web rendering from locally generated HTML file (including section navigation, symbol cross-references, roff tags on hover, and hyperlinks to other man pages which will also be locally generated)
+- [ ] GUI. GTK and Mobile (native and Termux)
+- [ ] Autocomplete (Online-powered too as opt-in)
+- [ ] Interactive `fzf` integration.
+- [ ] Experimental PDF to manpage converter (AI Powered)
+- [ ] Smart relevance detection by cross-referencing other data besides manned.org
+- [ ] Improved search results experience for multiple matches or similar results.
+- [ ] Social feature, voting for man page of the day.
+- [ ] Seriously ponder over the offer by Pandoc to buy this app.
+- [ ] Buy Adobe. The company, not the software.
+- [ ] Improve support for non-standard man page section names.
+
 ## Requirements
 
 ManPDF and ManWEB should work everywhere. The only requirements (which should already be installed in your system anyway) are:
