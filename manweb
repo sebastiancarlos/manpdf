@@ -46,7 +46,6 @@ _arg_try_local="on"
 _arg_output=
 _arg_pdf_viewer=
 
-# print the above 
 print_help()
 {
 	printf '%s\n' "ManWEB - Open a man page from Manned.org
