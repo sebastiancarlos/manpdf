@@ -4,6 +4,8 @@
 
 Read your Man pages in PDF format. Even Online!
 
+https://github.com/sebastiancarlos/manpdf/assets/88276600/0ca95ba0-54a8-4113-82f7-dfb58fb41cd9
+
 ## Installation
 
 Download the scripts and make them executable by running:
